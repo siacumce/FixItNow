@@ -9,7 +9,7 @@ using namespace std;
 inline int getCurrentYear() {
     time_t t = time(nullptr);
     tm now;
-    localtime_s(&now , &t);
+    localtime_r(&t, &now);
     return now.tm_year + 1900;
 }
 
