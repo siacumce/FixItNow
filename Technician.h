@@ -6,19 +6,17 @@ struct Competence {
     string brand;     // ex: "Samsung"
 };
 
-
 class Technician: public Employee{
     private: vector <Competence> competences;
-    vector <int> active_requests_IDs;
     vector <int> repairsValue;
 
-    double totalRepairsValue;
     public:
         using Employee::Employee;
         Technician() = default;
         double calculateSalary() const override;
         double getTransportBonus() const override;
-        void addRepairValue(double );
+
+        double getTotalRepairsValue() const;
         void addSkill(const string& , const string& );
         bool canRepair(const string& , const string& );
         ~Technician() = default;

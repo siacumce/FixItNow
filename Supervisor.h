@@ -5,6 +5,6 @@ class Supervisor : public Employee {
         using Employee::Employee; 
         Supervisor() = default;
         double calculateSalary() const override;
-        ~Supervisor();
+        ~Supervisor() = default;
 };
 

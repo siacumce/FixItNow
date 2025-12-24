@@ -21,8 +21,10 @@ class Employee {
     
     //The salary part
     virtual double calculateSalary() const = 0;
+    //bse+transport+seniority
     double calculateBaseEarnings() const;
 
+    //getters for basic bonus
     virtual double getTransportBonus() const;
     virtual double getSeniorityBonus() const;
 

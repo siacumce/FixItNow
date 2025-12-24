@@ -1,13 +1,21 @@
 #include "Technician.h"
 
-void Technician::addRepairValue(double value) {
-    totalRepairsValue += value;
+double Technician::getTotalRepairsValue() const{
+    double totalRepairsValue = 0;
+    for(auto& x : repairsValue){
+        totalRepairsValue += repairsValue[x];
+    }
+    return totalRepairsValue;
 }
-
+double Technician::getTransportBonus() const{
+    return Employee::getTransportBonus();
+}
 double Technician::calculateSalary() const {
-    double base_salary = Employee::calculateSalary();
+    double base_salary = Employee::calculateBaseEarnings();
+    
     //bonus 
-    double repairBonus = 0.02 * totalRepairsValue;
+    double totalRepairsValue = getTotalRepairsValue();
+    double repairBonus = 0.2*totalRepairsValue;
     return base_salary + repairBonus;
 }
 

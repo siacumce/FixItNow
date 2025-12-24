@@ -6,5 +6,5 @@ class Receptionist: public Employee{
     public:
     using Employee::Employee;
     void addID(const string&);
-
+    ~Receptionist() = default;
 };
