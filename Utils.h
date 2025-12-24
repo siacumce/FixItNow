@@ -3,15 +3,14 @@
 #include <string>
 #include <vector>
 #include <ctime>
-//#include <sstream>
-//#include <limits>
-//#include <numeric> // For std::accumulate
+
 using namespace std;
 
 inline int getCurrentYear() {
     time_t t = time(nullptr);
-    tm* now = localtime(&t);
-    return now->tm_year + 1900;
+    tm now;
+    localtime_s(&now , &t);
+    return now.tm_year + 1900;
 }
 
 inline int getYearFromString(const string &hireDate){
@@ -33,3 +32,14 @@ inline int calculateYearsSince(const string &hireDate){
     int no_of_years = current - hire_date;
     return (no_of_years < 0)? 0:no_of_years;
 }
+
+inline bool validateCNP(const string & cnp){
+    if (cnp.length() != 13) return false;
+
+    for(char c : cnp){
+        if(!isdigit(c)) return false;
+    }
+
+    //ceva mai complicat
+    return true;
+} 
