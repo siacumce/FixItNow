@@ -40,6 +40,25 @@ inline bool validateCNP(const string & cnp){
         if(!isdigit(c)) return false;
     }
 
-    //ceva mai complicat
+    const int constant_C[] = {2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9};
+    int sum = 0;
+
+    for(int i = 0; i < 12 ; i++){
+        int digit = cnp[i] - '0';
+        // I make each letter a digit I multiply 
+        // it by its correspondent in the constant_C
+        // and sum it up
+        sum += digit * constant_C[i];
+    }
+
+    int rest = sum % 11;
+    int control_digit = (rest == 10)? 1 : rest; 
+
+    int lastDigitOfCNP = cnp[12] - '0';
+
+    if(control_digit != lastDigitOfCNP) {
+        return false;
+    }
+
     return true;
 } 

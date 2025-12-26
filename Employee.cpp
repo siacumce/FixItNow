@@ -10,7 +10,10 @@ Employee::Employee(string name, string surname, string CNP, const int employeeID
         throw invalid_argument("Nume invalid!");
     }
    
-    // Verify CNP from Utils...i'll make smt up
+    // Verify CNP from Utils
+    if(!validateCNP(CNP)){
+        throw invalid_argument("CNP invalid!");
+    }
 }
 
 double Employee::calculateBaseEarnings() const{
