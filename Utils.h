@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include <vector>
 #include <ctime>
 
@@ -33,11 +34,15 @@ inline int calculateYearsSince(const string &hireDate){
     return (no_of_years < 0)? 0:no_of_years;
 }
 
-inline bool validateCNP(const string & cnp){
-    if (cnp.length() != 13) return false;
+inline bool validateCNP(string & cnp){
 
-    for(char c : cnp){
-        if(!isdigit(c)) return false;
+    cnp.erase(remove_if(cnp.begin(), cnp.end(),
+    [](unsigned char c) { return !isdigit(c); }), cnp.end());
+
+  
+    if (cnp.length() != 13) {
+        // cout << "CNP Invalid (lungime " << cnp.length() << "): " << cnp << endl;
+        return false;
     }
 
     const int constant_C[] = {2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9};
