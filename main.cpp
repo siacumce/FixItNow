@@ -13,9 +13,7 @@ void displayMenu(){
     cout <<" 6. Display list of employees;\n";
     cout <<" 0. Exit\n";
 }
-void AddMenu(){
-    string type;
-}
+
 
 int main(){
 
