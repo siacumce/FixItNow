@@ -10,6 +10,8 @@ Employee::Employee(string name, string surname, string CNP, string hireDate, str
         throw invalid_argument("Nume invalid!");
     }
    
+    //verify if the person is old enough
+
     // Verify CNP from Utils
     if(!validateCNP(CNP)){
         throw invalid_argument("CNP invalid!");
@@ -43,13 +45,16 @@ string Employee::getCNP() const{
         return this->CNP;
 }
 
+string Employee::getSurname() const{
+        return surname;
+}
+
 void Employee::setSurname(const string& newSurname){
        if (!newSurname.empty()) {
             this->surname = newSurname;
         }
 }
-
 void Employee::disp() const{
-        cout << "Name: " << name << " surname: " << surname << endl;
-        cout << " city of provenience: " << residenceCity << endl;
+        cout << " Full Name: " << name << " " << surname << endl;
+        cout << " City of Residence: " << residenceCity << endl;
 }

@@ -21,10 +21,10 @@ void Service::hireEmployee(const string& name, const string& surname,
     try{
         auto newEmp = EmployeeFactory::createEmployee(type, name, surname, cnp, hiredate, city);
         employees.push_back(newEmp);
-        cout << "[SUCCESS] Employee added: " << name << " " << surname << endl;
+        cout << "[SUCCESS] Employee added: " << name << " " << surname << endl << "---------------------" << endl;
     }
     catch(const exception& e){
-        cout << "[ERROR] Employee " << name << " " << surname << " was not added! " << e.what() << endl;
+        cout << "[ERROR] Employee " << name << " " << surname << " was not added! " << e.what() << endl << "---------------------" << endl;
     }
 }
 
@@ -79,20 +79,23 @@ void Service::loadEmployeesFromFile(const string& filePath){
      cout << "\n---Employee upload completed---" << endl;
 }
 
-void Service::modifySurname(int id, const string& surname){
+string Service::modifySurname(const string& oldSurname, string& newSurname){
     bool found = false;
 
     for(auto& emp : employees){
-        if(emp->getId() == id){
+        if(emp->getSurname() == oldSurname){
             found = true;
-            emp->setSurname(surname);
-            break;
+            emp->setSurname(newSurname);
+            return emp->getCNP();
         }
     }
 
     if(!found){
-        cout << "Employee with the ID " << id << " was not found." << endl; 
+        cout << "Employee with surname: " << oldSurname << " was not found." << endl; 
     }
+
+    return "";
+    
 }
 
 void Service::listAllEmployees() const {
@@ -101,41 +104,42 @@ void Service::listAllEmployees() const {
         // disp() specifică tipului ***real*** al obiectului
         emp->disp(); 
     }
+
+    cout << "-----------------------------------------------" << endl;
 }
 
 
-void Service::displayEmployee(int id) {
+void Service::displayEmployee(string& CNP) {
     bool found = false;
 
     for (const auto& emp : employees) {
-        if (emp->getId() == id) { 
+        if (emp->getCNP() == CNP) { 
             found = true;
             cout << "---------------------------------" << endl;
             emp->disp(); 
 
-            cout << "Rol detectat: ";
+            cout << "[Rol detected: ";
         
             if (dynamic_cast<Supervisor*>(emp.get()) != nullptr) {
-                cout << "SUPERVISOR";
+                cout << "SUPERVISOR ]";
                 // Opțional: Poți accesa și metode specifice Supervizorului
                 // auto sup = dynamic_cast<Supervisor*>(emp.get());
                 // cout << " (Echipa: " << sup->getEchipa() << ")";
             }
-
             else if (dynamic_cast<Technician*>(emp.get()) != nullptr) {
-                cout << "TECHNICIAN";
+                cout << "TECHNICIAN ]";
             }
             else if (dynamic_cast<Receptionist*>(emp.get()) != nullptr) {
-                cout << "RECEPTIONIST";
+                cout << "RECEPTIONIST ]";
             }
             else {
-                cout << "UNKNOWN ROLE";
+                cout << "UNKNOWN ]";
             }
             cout << endl << "---------------------------------" << endl;
             break; 
         }
     }
     if (!found) {
-        cout << "Employee with the ID " << id << " was not found." << endl;
+        cout << "Employee with the CNP " << CNP << " was not found." << endl;
     }
 }

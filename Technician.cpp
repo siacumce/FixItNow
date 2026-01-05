@@ -37,5 +37,5 @@ string Technician::getRole() const{
 
 void Technician::disp() const{
     Employee::disp();
-    cout << " [Rol: " << getRole() << " ]" << endl;
+    //cout << " [Rol: " << getRole() << " ]" << endl;
 }

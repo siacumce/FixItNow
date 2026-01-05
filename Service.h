@@ -20,8 +20,8 @@ class Service{
                    const string& , const string& ,
                    const string& , const string& ); 
         void fireEmployee(int );
-        void modifySurname(int , const string& );
+        string modifySurname(const string&, string& );
         void listAllEmployees() const;
-        void displayEmployee(int); 
+        void displayEmployee(string& ); 
         ~Service();
 };

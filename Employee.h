@@ -32,6 +32,7 @@ class Employee {
     void setSurname(const string& );    
     int getId() const;
     string getCNP() const;
+    string getSurname() const;
     virtual string getRole() const = 0;
 
     virtual void disp() const;

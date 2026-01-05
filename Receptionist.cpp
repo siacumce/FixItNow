@@ -13,5 +13,5 @@ string Receptionist::getRole() const{
 
 void Receptionist::disp() const{
     Employee::disp();
-    cout << " [Rol: " << getRole() << " ]" << endl;
+    //cout << " [Rol: " << getRole() << " ]" << endl;
 }

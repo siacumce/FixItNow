@@ -12,5 +12,4 @@ string Supervisor::getRole() const {
 }
 void Supervisor::disp() const{
     Employee::disp();
-     cout << " [Role: " << getRole() << "]" << endl;
 }
