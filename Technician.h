@@ -2,7 +2,7 @@
 
 
 struct Competence {
-    string type; // ex: "Frigider"
+    string type; // ex: "Fridge"
     string brand;     // ex: "Samsung"
 };
 

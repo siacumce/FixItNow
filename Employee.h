@@ -7,7 +7,7 @@ using namespace std;
 
 class Employee {
     protected:
-        int BASE_SALARY = 4000; 
+        const int BASE_SALARY = 4000; 
         string name;
         string surname;
         string CNP; 
@@ -17,11 +17,11 @@ class Employee {
         static int nextID;
 
     public:
-    Employee(string , string , string , const int , string , string );
+    Employee(string , string , string , string , string );
     
     //The salary part
     virtual double calculateSalary() const = 0;
-    //bse+transport+seniority
+    //base+transport+seniority
     double calculateBaseEarnings() const;
 
     //getters for basic bonus

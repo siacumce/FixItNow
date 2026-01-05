@@ -3,7 +3,7 @@
 
 int Employee::nextID = 0;
 
-Employee::Employee(string name, string surname, string CNP, const int employeeID, string hireDate, string city)
+Employee::Employee(string name, string surname, string CNP, string hireDate, string city)
         :name(name), surname(surname), CNP(CNP), employeeID(++nextID), hireDate(hireDate), residenceCity(city){
 
     if (name.length() < 3 || name.length() > 30) {
@@ -17,14 +17,14 @@ Employee::Employee(string name, string surname, string CNP, const int employeeID
 }
 
 double Employee::calculateBaseEarnings() const{
-        return BASE_SALARY + getSeniorityBonus() + getTransportBonus();
+        return getSeniorityBonus() + getTransportBonus();
 }
 double Employee::getSeniorityBonus() const{
         int years_of_work = calculateYearsSince(Employee::hireDate);
 
         int nr_of_bonuses = years_of_work/3, bonus = this->BASE_SALARY;
         for (int i = 0; i < nr_of_bonuses; i++){
-                bonus += 0.05 * bonus + bonus;
+                bonus += 0.05 * bonus;
         }
         return bonus;
 }

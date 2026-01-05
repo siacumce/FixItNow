@@ -2,8 +2,8 @@
 
 double Technician::getTotalRepairsValue() const{
     double totalRepairsValue = 0;
-    for(auto& x : repairsValue){
-        totalRepairsValue += repairsValue[x];
+    for(const auto& x : repairsValue){
+        totalRepairsValue += x;
     }
     return totalRepairsValue;
 }
