@@ -7,5 +7,7 @@ class Receptionist: public Employee{
     using Employee::Employee;
     void addID(const string&);
     double calculateSalary() const override;
+    void disp() const override;
+    string getRole() const override;
     ~Receptionist() = default;
 };

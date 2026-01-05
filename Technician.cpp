@@ -31,3 +31,11 @@ bool Technician::canRepair(const string& type, const string& brand){
     }
     return false;
 }
+string Technician::getRole() const{
+    return "Technician";
+}
+
+void Technician::disp() const{
+    Employee::disp();
+    cout << " [Rol: " << getRole() << " ]" << endl;
+}

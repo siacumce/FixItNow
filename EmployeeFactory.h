@@ -14,7 +14,7 @@ public:
     static shared_ptr<Employee> createEmployee(const string& type, const string& name, 
         const string& surname, const string& cnp, const string& hireDate, const string& city) {
 
-        if (type == "Tehnician") {
+        if (type == "Technician") {
             // std::make_shared is a Modern C++ module of making "new Technician(...)"
             return make_shared<Technician>(name, surname, cnp, hireDate, city);
         }

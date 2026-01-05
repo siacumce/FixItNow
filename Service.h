@@ -15,19 +15,13 @@ class Service{
         static Service* getInstance();
 
         //Main Functionalities for employees
-        
         void loadEmployeesFromFile(const string& );
-
         void hireEmployee(const string& , const string& , 
                    const string& , const string& ,
                    const string& , const string& ); 
-        
         void fireEmployee(int );
-        
         void modifySurname(int , const string& );
-
         void listAllEmployees() const;
-        
+        void displayEmployee(int); 
         ~Service();
-
 };

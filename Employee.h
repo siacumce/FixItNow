@@ -28,10 +28,13 @@ class Employee {
     virtual double getTransportBonus() const;
     virtual double getSeniorityBonus() const;
 
-    // Getters for display
-    //virtual string getFullName() const = 0;
-    //virtual string getCNP() const = 0;
+    // Getters/Setters for display
+    void setSurname(const string& );    
     int getId() const;
-    void disp() const;
+    string getCNP() const;
+    virtual string getRole() const = 0;
+
+    virtual void disp() const;
+
     virtual ~Employee() = default; 
 };  

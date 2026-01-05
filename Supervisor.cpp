@@ -7,3 +7,10 @@ double Supervisor::calculateSalary() const{
     salary += (0.20 * Employee::BASE_SALARY);
     return salary;
 }
+string Supervisor::getRole() const {
+        return "Supervisor";
+}
+void Supervisor::disp() const{
+    Employee::disp();
+     cout << " [Role: " << getRole() << "]" << endl;
+}

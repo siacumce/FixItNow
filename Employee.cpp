@@ -39,6 +39,17 @@ int Employee::getId() const {
     return this->employeeID;
 }
 
-void Employee::disp() const {
-   // cout << ": " << employeeID << ", Name: " << name << ", Surname: " << surname << ", city: " << residenceCity << endl;
+string Employee::getCNP() const{
+        return this->CNP;
+}
+
+void Employee::setSurname(const string& newSurname){
+       if (!newSurname.empty()) {
+            this->surname = newSurname;
+        }
+}
+
+void Employee::disp() const{
+        cout << "Name: " << name << " surname: " << surname << endl;
+        cout << " city of provenience: " << residenceCity << endl;
 }

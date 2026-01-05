@@ -19,5 +19,7 @@ class Technician: public Employee{
         double getTotalRepairsValue() const;
         void addSkill(const string& , const string& );
         bool canRepair(const string& , const string& );
+        void disp() const override;
+        string getRole() const override;
         ~Technician() = default;
 };
