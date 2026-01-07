@@ -35,7 +35,7 @@ class Employee {
     string getSurname() const;
     string getName() const;
     virtual string getRole() const = 0;
-
+    
     virtual void disp() const;
 
     virtual ~Employee() = default; 

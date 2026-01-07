@@ -2,12 +2,24 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+using namespace std;
 
 class Appliance{
     private:
-        
+        string brand;
+        string model;
+        int manufacturingYear;
+        double price;
     public:
+        Appliance(string&, string&, int, double);
+        
+        string getModel() const;
+        string getBrand() const;
+        int getYear() const;
+        double getPrice() const;
 
-        virtual ~Appliance();
+        virtual string getType() const = 0;
+        virtual void disp() const;
+         
+        virtual ~Appliance() =  default;
 };
