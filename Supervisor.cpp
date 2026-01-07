@@ -12,4 +12,6 @@ string Supervisor::getRole() const {
 }
 void Supervisor::disp() const{
     Employee::disp();
+    cout << "Current Month Salary: " << calculateSalary() << endl; 
+    cout << "---------------------" << endl;
 }

@@ -10,7 +10,6 @@ class Service{
     public:
         Service(const Service &) = delete;
         Service& operator=(const Service&) = delete;
-
         //static factory method
         static Service* getInstance();
 
@@ -20,7 +19,8 @@ class Service{
                    const string& , const string& ,
                    const string& , const string& ); 
         void fireEmployee(int );
-        string modifySurname(const string&, string& );
+        void displayEmployeeSalary(string& );
+        string modifySurname(const string&, const string&, string& );
         void listAllEmployees() const;
         void displayEmployee(string& ); 
         ~Service();

@@ -4,13 +4,12 @@
 using namespace std;
 
 void displayEmployeeSettingsMenu(){
+    cout <<" 0. Exit\n";
     cout <<" 1. Add employee;\n";
     cout <<" 2. Modify surname of employee;\n";
     cout <<" 3. Delete employee;\n";
     cout <<" 4. Search employee by CNP and display data;\n";
-    cout <<" 5. Calculate salary;\n";
-    cout <<" 6. Display list of employees;\n";
-    cout <<" 0. Exit\n";
+    cout <<" 5. Display list of employees;\n";
 }
 void displayMenu(){
     cout << "[SETTINGS] \n" ; 
@@ -49,34 +48,47 @@ int main(){
                     switch (option1)
                     {
                     case 1:{ //hire someone
+                        cin.ignore(); 
                         string type, name, surname, city, cnp, hireDate;
-                        cout << "Role (Supervisor, Technician, Receptionist): "; cin >> type;
-                        cout << "Name: "; cin >> name;
-                        cout << "Surname: "; cin >> surname;
-                        cout << "City of Residence: "; cin >> city;
-                        cout << "CNP: "; cin >> cnp;
-                        cout << "Hire date(DD.MM.YYYY): " ; cin >> hireDate;
+                        cout << "Role (Supervisor, Technician, Receptionist): "; getline(cin, type);
+                        cout << "Name: "; getline(cin, name);
+                        cout << "Surname: "; getline(cin, surname);
+                        cout << "City of Residence: "; getline(cin, city);
+                        cout << "CNP: "; getline(cin, cnp);
+                        cout << "Hire date(DD.MM.YYYY): " ; getline(cin, hireDate);
                         s->hireEmployee(name, surname, cnp, hireDate, city, type);
                         break;
                     }
                     case 2:{  //modify surname
+                        cin.ignore(); 
                         string newSurname, surname, cnp;
-                        cout << "Enter OLD SURNAME: ";  cin >> surname;
-                        cout << "NEW SURNAME: "; cin >> newSurname;
-                        cnp = s->modifySurname(surname, newSurname);
-                        s->displayEmployee(cnp);
+                        cout << "Enter CNP: "; getline(cin, cnp);
+                        cout << "Enter OLD SURNAME: ";  getline(cin, surname);
+                        cout << "NEW SURNAME: "; getline(cin, newSurname);
+                        cnp = s->modifySurname(cnp, surname, newSurname);
+
+                        if(cnp != "") {
+                            cout << " Modified ! " << endl;
+                            s->displayEmployee(cnp);
+                            break;
+                        }
+                        break;
                     }
                     case 3:{ //fire someone 
-
+                        cin.ignore(); 
+                        int id;
+                        cout << "Enter ID: " ; cin >> id;
+                        s->fireEmployee(id);
                         break;
                     }
                     case 4:{
+                        cin.ignore();
+                        string cnp;
+                        cout << " Enter CNP: "; getline(cin, cnp);
+                        s->displayEmployee(cnp);
                         break;
                     }
                     case 5:{
-                        break;
-                    }
-                    case 6:{
                         s->listAllEmployees();
                         break;
                     }
@@ -103,6 +115,5 @@ int main(){
             break;
         }
     }
-    
     return 0;
 }

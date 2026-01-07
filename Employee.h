@@ -21,7 +21,7 @@ class Employee {
     
     //The salary part
     virtual double calculateSalary() const = 0;
-    //base+transport+seniority
+    //base + transport + seniority
     double calculateBaseEarnings() const;
 
     //getters for basic bonus
@@ -33,6 +33,7 @@ class Employee {
     int getId() const;
     string getCNP() const;
     string getSurname() const;
+    string getName() const;
     virtual string getRole() const = 0;
 
     virtual void disp() const;

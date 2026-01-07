@@ -7,6 +7,10 @@
 // initialization of static member 
 Service* Service::instance = nullptr;
 
+void notFound(bool found, const string& cnp){
+    if(found == 0)
+        cout << "Employee with the CNP " << cnp << " was not found." << endl;
+}
 Service* Service::getInstance() {
     if (instance == nullptr) {
         instance = new Service();
@@ -28,6 +32,14 @@ void Service::hireEmployee(const string& name, const string& surname,
     }
 }
 
+string trim(string& str){
+    size_t first = str.find_first_not_of(' ');
+    if (string::npos == first) {
+        return "";
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
+}
 void Service::loadEmployeesFromFile(const string& filePath){
     ifstream f(filePath);
 
@@ -46,9 +58,8 @@ void Service::loadEmployeesFromFile(const string& filePath){
         string data;
         vector <string> rowData;
         stringstream ss(line);
-
         while(getline(ss, data, ',')){
-            rowData.push_back(data);
+            rowData.push_back(trim(data));
         }
         
         try{
@@ -61,15 +72,14 @@ void Service::loadEmployeesFromFile(const string& filePath){
 
             auto emp = EmployeeFactory::createEmployee(type, name, surname, cnp, date, city);
             auto tech = dynamic_pointer_cast <Technician> (emp);
-            //if this cast would not return a null pointer, the returned object shares ownership over what the pointer indicates to
+            //if this cast would not return a null pointer, the returned object shares ownership
+            // over what the pointer indicates to
             if(tech != nullptr ){
                 for(int i = 6; i < rowData.size(); i+= 2){ // + 2  because the data read is paired in 2 > type + brand
                     tech -> addSkill(rowData[i], rowData[i+1]);
                 }
             }
-
             employees.push_back(emp);
-
         }catch(const exception& e){
             cout << "[EROARE Linia " << count_lines << "] " << e.what() << endl;
         }        
@@ -79,39 +89,31 @@ void Service::loadEmployeesFromFile(const string& filePath){
      cout << "\n---Employee upload completed---" << endl;
 }
 
-string Service::modifySurname(const string& oldSurname, string& newSurname){
+string Service::modifySurname(const string& cnp, const string& oldSurname, string& newSurname){
     bool found = false;
 
     for(auto& emp : employees){
-        if(emp->getSurname() == oldSurname){
+        if(emp->getCNP() == cnp){
             found = true;
             emp->setSurname(newSurname);
             return emp->getCNP();
         }
     }
-
-    if(!found){
-        cout << "Employee with surname: " << oldSurname << " was not found." << endl; 
-    }
-
+    notFound(found, cnp);
     return "";
-    
 }
 
 void Service::listAllEmployees() const {
     for (const auto& emp : employees) {
-        // polimorfism
-        // disp() specifică tipului ***real*** al obiectului
+        // polimorfism -- disp() specifică tipului ***real*** al obiectului
         emp->disp(); 
     }
 
-    cout << "-----------------------------------------------" << endl;
+    cout << "---------------------" << endl;
 }
-
 
 void Service::displayEmployee(string& CNP) {
     bool found = false;
-
     for (const auto& emp : employees) {
         if (emp->getCNP() == CNP) { 
             found = true;
@@ -139,7 +141,24 @@ void Service::displayEmployee(string& CNP) {
             break; 
         }
     }
-    if (!found) {
-        cout << "Employee with the CNP " << CNP << " was not found." << endl;
-    }
+    notFound(found, CNP);
 }
+
+void Service::fireEmployee(int ID) {
+    bool found = false;
+
+    for (auto emp = employees.begin(); emp != employees.end(); ++emp){
+        if((*emp)->getId() == ID){
+            found = true;
+            employees.erase(emp); 
+            cout << "Employee with ID " << ID <<" was deleted successfully. \n";
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Employee with the ID " << ID << " was not found." << endl;
+    }
+
+}
+

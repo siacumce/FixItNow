@@ -7,6 +7,40 @@
 
 using namespace std;
 
+inline bool isOldEnough(const string& CNP, const string& hireDate){
+    int s = CNP[0] - '0';
+    int yy = stoi(CNP.substr(1, 2)); // year >> 05 for 2005
+    int mm = stoi(CNP.substr(3, 2)); // month
+    int dd = stoi(CNP.substr(5, 2)); // day
+
+    int birthYear = 0;
+
+    if(s == 3 || s == 4){
+        return true;
+    }
+    else if( s == 1 || s == 2){
+        birthYear = 1900 + yy;
+    }
+    else if ( s == 5 || s == 6){
+        birthYear = 2000 + yy;
+    }
+    else {
+        birthYear = 2000 + yy;
+    }
+
+    int hireDay = stoi(hireDate.substr(0, 2));
+    int hireMonth = stoi(hireDate.substr(3, 2));
+    int hireYear = stoi(hireDate.substr(6, 4));
+
+    int ageAtHiring = hireYear - birthYear;
+
+    if(hireMonth < mm || (hireMonth == mm && hireDay < dd)){
+        ageAtHiring --; // still his birthday has not passed
+    }
+
+    return ageAtHiring >= 16;
+}
+
 inline int getCurrentYear() {
     time_t t = time(nullptr);
     tm now;
@@ -39,9 +73,7 @@ inline bool validateCNP(string & cnp){
     cnp.erase(remove_if(cnp.begin(), cnp.end(),
     [](unsigned char c) { return !isdigit(c); }), cnp.end());
 
-  
     if (cnp.length() != 13) {
-        // cout << "CNP Invalid (lungime " << cnp.length() << "): " << cnp << endl;
         return false;
     }
 
