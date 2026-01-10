@@ -11,7 +11,7 @@ class Appliance{
         int manufacturingYear;
         double price;
     public:
-        Appliance(string&, string&, int, double);
+        Appliance(const string&,const string&, int, double);
         
         string getModel() const;
         string getBrand() const;

@@ -11,8 +11,13 @@ class EmployeeFactory {
 public:
 
     //static method --- used for being called w/o an object
-    static shared_ptr<Employee> createEmployee(const string& type, const string& name, 
-        const string& surname, const string& cnp, const string& hireDate, const string& city) {
+    static shared_ptr<Employee> createEmployee(
+        const string& type,
+        const string& name, 
+        const string& surname,
+        const string& cnp,
+        const string& hireDate,
+        const string& city) {
 
         if (type == "Technician") {
             // std::make_shared is a Modern C++ module of making "new Technician(...)"

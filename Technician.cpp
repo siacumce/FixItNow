@@ -37,6 +37,7 @@ string Technician::getRole() const{
 
 void Technician::disp() const{
     Employee::disp();
+    cout << "Role: " << getRole() << endl;
     cout << "Current Month Salary: " << calculateSalary() << endl; 
     cout << "---------------------" << endl;
 }

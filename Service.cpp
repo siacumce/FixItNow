@@ -159,6 +159,199 @@ void Service::fireEmployee(int ID) {
     if (!found) {
         cout << "Employee with the ID " << ID << " was not found." << endl;
     }
-
 }
 
+//Appliances Factory
+void Service::loadSupportedAppliances(const string &filePath){
+    ifstream f(filePath);
+
+    if(!f.is_open()){
+        cout << "Error: the file could not be opened! " << filePath << endl;
+        return;
+    }
+
+    int count = 0;
+    string line;
+    while(getline(f, line)){
+        count ++;
+        if (line.empty() || line[0] == '#') continue;
+        string data;
+        vector<string> rowData;
+        stringstream ss(line);
+        while(getline(ss, data, ',')){
+            rowData.push_back(trim(data));
+        }
+        try{
+            string type = rowData[0];
+            string brand = rowData[1];
+            string model = rowData[2];
+            int year = stoi(rowData[3]);
+            double price = stod(rowData[4]);
+            double extra = stod(rowData[5]);
+            auto app = ApplianceFactory::createAppliance(type, brand, model, year, price, extra);
+            if (app != nullptr) {
+                supportedAppliances.push_back(app);
+            }
+        }catch(const exception& e){
+            cout << "[EROARE Linia " << count << "] " << e.what() << endl;
+        }
+    }
+    f.close();
+    cout << "Appliances Data Base uploaded.\n";
+}
+bool Service::isServiceFunctional() const {
+    int techCount = 0;
+    int recepCount = 0;
+    int superCount = 0;  
+    
+    for(const auto& emp : employees){
+
+        if(dynamic_pointer_cast<Technician>(emp))
+            techCount++;
+        else if(dynamic_pointer_cast<Supervisor>(emp))
+            superCount++;
+        else if(dynamic_pointer_cast<Receptionist>(emp))
+            recepCount++;
+        //or I can use getRole()
+    }
+
+    bool verify = 1;
+    if(techCount < 3) verify = 0;
+    if(recepCount < 1) verify = 0;
+    if(superCount < 1) verify = 0;
+
+    if(!verify){
+        cout << "\n[!] ATENTION: the service could not function!" << endl;
+        cout << "   Conditions: Min. 3 Technicians, 1 Receptionist, 1 Supervisor." << endl;
+        cout << "   Current:  " << superCount << " Supervisors, " << techCount << " Tehnicians, " << recepCount << " Receptionists. " << endl;
+        return false;
+    }
+    return true;
+}
+void Service::listAllAppliances() const{
+    for (const auto& app : supportedAppliances) {
+        app->disp(); 
+    }
+    cout << "---------------------" << endl;
+}
+void Service::addAppliance(const string& type, const string& brand, const string& model, int year, double price, double extra){
+    try{
+        auto app = ApplianceFactory::createAppliance(type, brand, model, year, price, extra);
+        supportedAppliances.push_back(app);
+        cout << "[SUCCESS] The device " << brand << " " << model << " was added in the catalog.\n";
+    }catch(const exception& e){
+        cout << "[ERROR] The device could not be added: " << e.what() << endl;
+    }
+}
+void Service::removeSupportedAppliance(const string& brand, const string& model){
+    bool found = false;
+    for(auto app = supportedAppliances.begin(); app != supportedAppliances.end(); app++){
+        if((*app)->getBrand() == brand && (*app)->getModel() == model){
+            supportedAppliances.erase(app);
+            found = true;
+            cout << "[SUCCESS] The model " << brand << " " << model << " was deleted from the catalog.\n";
+            break;
+        }
+    }
+    if(!found)
+        cout << "[INFO] The model " << brand << " " << model << " does not exist in the catalog.\n";
+}
+
+//simulation and repair
+void Service::listRepairedAppliances() const{
+    if(!repairedAppliances.size()){
+        cout << "There aren't any repaired devices! \n";
+        return;
+    }
+    cout << "------HISTORY------" << endl;
+    for (const auto& app : repairedAppliances) {
+        app->disp(); 
+        cout << "-------------------------\n";
+    }
+}
+void Service::registerRequest(const string& type, const string& brand, const string& model, int year, double price, double extra, int complexity){
+    shared_ptr<Receptionist> rec = nullptr;
+    
+    for (auto& emp : employees) {
+        rec = dynamic_pointer_cast<Receptionist>(emp);
+        if (rec != nullptr) {
+            break; 
+        }
+    }
+    if (rec == nullptr) {
+        cout << "[EROARE] We do not have any receptionist! We cannot have requests!\n";
+        return; 
+    }
+    
+    bool isSupported = false;
+    for(const auto& app : supportedAppliances){
+        if(app->getType() == type && app->getModel() == model && app->getBrand() == brand){
+            isSupported = true;
+            break;
+        }
+    }
+
+    if(!isSupported){
+        cout << "[REFUSED] Model " << brand << " " << model << " is not supported\n";
+        logRefusedOnes(type, brand, model);
+        return;
+    }
+    try{
+        auto app = ApplianceFactory::createAppliance(type, brand, model, year, price, extra);
+        Request req(app, complexity);
+        waitingList.push_back(req);
+
+        //add ID in requestID vector from receptionist
+        rec->addRequestID(req.getID());
+
+        cout << "Request has been registered by the receptionist: " << rec->getName() << " " << rec->getSurname() << endl;
+    }catch(const exception&e){
+        cout << "[ERROR] Invalid Data on creating request: " << e.what() << endl;
+    }
+
+}
+// void Service::runSimulation(const string& filePath, int time){
+//      ;
+// }
+void Service::displayWaitingList() const{
+    cout << "======= WAITING LIST ======= \n";
+    if(waitingList.empty()){
+        cout << "There aren't any requests in waiting.\n";
+    }
+    else{
+        for(const auto& req : waitingList){
+            req.disp();
+        }
+    }
+    cout << "---------------------" << endl;
+}
+
+//static means i make this function private tot this file, instead of global in the entire set of files
+static bool cmp(pair<string, int>& a, pair<string, int>& b) 
+{ 
+    return a.second > b.second; 
+}
+
+void Service::displayRefusedOnes() const{
+    if(refusedAppliances.empty()){
+        cout << "There are not any refused appliances.\n";
+        return;
+    }
+    //I have to sort the occurrence count
+    vector<pair<string, int>> A;
+
+    for (auto& map_val : refusedAppliances){
+        A.push_back(map_val);
+    }
+    sort(A.begin(), A.end(), cmp);
+    cout << "======= REFUSAL STATISTICS =======\n";
+    for (auto& keys : A) { 
+        cout << keys.first << ' '<< keys.second << endl; 
+    } 
+
+}
+void Service::logRefusedOnes(const string& type, const string& brand, const string& model){
+    string value = type + " | " + brand + " " + model;
+    //increment its key
+    refusedAppliances[value]++;
+}

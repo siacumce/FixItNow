@@ -1,6 +1,6 @@
 #include "Fridge.h"
 
-Fridge::Fridge(string& brand, string& model, int year, double price, bool hasFreezer)
+Fridge::Fridge(const string& brand, const string& model, int year, double price, bool hasFreezer)
     :Appliance(brand, model, year, price), hasFreezer(hasFreezer){}
 
 string Fridge::getType() const{

@@ -1,6 +1,6 @@
 #include "Appliance.h"
 
-Appliance::Appliance(string& brand, string& model, int manYear, double price):brand(brand), 
+Appliance::Appliance(const string& brand,const string& model, int manYear, double price):brand(brand), 
     model(model), manufacturingYear(manYear), price(price){}
 
 string Appliance::getModel() const{
