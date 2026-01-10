@@ -35,8 +35,7 @@ class Service{
         void loadSupportedAppliances(const string& );
         void addAppliance(const string&, const string&, const string&, int, double, double);
         void removeSupportedAppliance(const string&, const string& );
-        //neterminat
-        void registerRequest(const string&, const string&, const string&, int, double, double, int );
+
 
         void listAllAppliances() const; // catalog
         void listRepairedAppliances() const;
@@ -45,8 +44,9 @@ class Service{
         void logRefusedOnes(const string& , const string& , const string& );
 
         //Repair Simulation
+        void registerRequest(const string&, const string&, const string&, int, double, double, int );
         void loadRequestsFromFile(const string& ); //file
-       // void loadRequestsFromWaitingList() const;
+        void loadRequestsFromWaitingList() const;
         void runSimulation(const string&, double ); //file, duration and waiting list
         void displayWaitingList() const;
         ~Service();

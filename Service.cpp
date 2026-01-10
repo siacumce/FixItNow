@@ -32,12 +32,12 @@ void Service::hireEmployee(const string& name, const string& surname,
     }
 }
 
-string trim(string& str){
+string trim(const string& str){
     size_t first = str.find_first_not_of(' ');
     if (string::npos == first) {
         return "";
     }
-    size_t last = str.find_last_not_of(' ');
+    size_t last = str.find_last_not_of(" \t");
     return str.substr(first, (last - first + 1));
 }
 void Service::loadEmployeesFromFile(const string& filePath){
@@ -88,7 +88,6 @@ void Service::loadEmployeesFromFile(const string& filePath){
      f.close();
      cout << "\n---Employee upload completed---" << endl;
 }
-
 string Service::modifySurname(const string& cnp, const string& oldSurname, string& newSurname){
     bool found = false;
 
@@ -102,7 +101,6 @@ string Service::modifySurname(const string& cnp, const string& oldSurname, strin
     notFound(found, cnp);
     return "";
 }
-
 void Service::listAllEmployees() const {
     for (const auto& emp : employees) {
         // polimorfism -- disp() specifică tipului ***real*** al obiectului
@@ -111,7 +109,6 @@ void Service::listAllEmployees() const {
 
     cout << "---------------------" << endl;
 }
-
 void Service::displayEmployee(string& CNP) {
     bool found = false;
     for (const auto& emp : employees) {
@@ -143,7 +140,6 @@ void Service::displayEmployee(string& CNP) {
     }
     notFound(found, CNP);
 }
-
 void Service::fireEmployee(int ID) {
     bool found = false;
 
@@ -257,7 +253,7 @@ void Service::removeSupportedAppliance(const string& brand, const string& model)
         cout << "[INFO] The model " << brand << " " << model << " does not exist in the catalog.\n";
 }
 
-//simulation and repair
+//Simulation and repair
 void Service::listRepairedAppliances() const{
     if(!repairedAppliances.size()){
         cout << "There aren't any repaired devices! \n";
@@ -354,4 +350,45 @@ void Service::logRefusedOnes(const string& type, const string& brand, const stri
     string value = type + " | " + brand + " " + model;
     //increment its key
     refusedAppliances[value]++;
+}
+void Service::loadRequestsFromWaitingList() const{;}
+void Service::loadRequestsFromFile(const string& filePath){;
+    ifstream f("filePath");
+
+    if(!f.is_open()){
+        cout << "The file: " << filePath << " could not be opened.\n";
+        return;
+    }
+
+    int count = 0;
+    string line;
+    while(getline(f,line)){
+        count ++;
+        string data;
+        vector<string> dataRow;
+        stringstream segment(line);
+
+        while(getline(segment, data, ',')){
+            dataRow.push_back(trim(data));
+        }
+
+        try{
+            string type = dataRow[0];
+            string brand = dataRow[1];
+            string model = dataRow[2];
+            int year = stoi(dataRow[3]);
+            double price = stoi(dataRow[4]);
+            double extra = stoi(dataRow[5]);
+            int complexity = stoi(dataRow[6]);
+
+            registerRequest(type, brand, model, year, price, extra, complexity);
+            ///AICICICICICIICIC AI RAMAS
+
+        }catch (const exception& e) {
+            cout << "[ERROR] LINE " << count  << " " << e.what() << endl;
+        }
+
+        f.close();
+    }
+
 }

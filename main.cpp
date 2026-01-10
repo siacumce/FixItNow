@@ -11,13 +11,17 @@ void EmployeeSettingsMenu(){
     cout <<" 4. Search employee by CNP and display data;\n";
     cout <<" 5. Display List of Employees;\n";
 }
-
+void RequestMenu(){
+    cout << "0. Exit\n";
+    cout << "1. Add Request\n";
+    cout << "2. Load Requests\n";
+}
 void AppliancesSettingsMenu(){
     cout <<" 0. Exit\n";
     cout <<" 1. Display Appliance Catalog.\n";
     cout <<" 2. Add/delete brand & model\n";
     cout <<" 3. Display repair history\n";
-    cout <<" 4. Display waiting list\n";
+    cout <<" 4. Display refusal list\n";
 }
 void displayMenu(){
     cout << "[SETTINGS] \n" ; 
@@ -178,6 +182,7 @@ int main(){
             int option3 = -1;
             while(option3){
                 //Request menu
+                RequestMenu();
                 cout << "-------->Your option: "; cin >> option3;
                 switch (option3)
                 {
@@ -200,10 +205,10 @@ int main(){
                     cin.ignore();
                     string filename;
                     int time;
-                    cout << "[ENTER] filename (e.g requests.csv): "; getline(cin, filename);
+                    cout << "[ENTER] filename (e.g requests1.csv): "; getline(cin, filename);
                     cout << "Simulation Duration (seconds): "; cin >> time;
 
-                    //s->runSimulation(filename, time); // all go into the waiting list and then they are shared to the technicians => + history of repaired ones
+                    s->runSimulation(filename, time); // all go into the waiting list and then they are shared to the technicians => + history of repaired ones
                     break;
                 } 
                 case 3:{ // list wating list
