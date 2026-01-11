@@ -1,43 +1,70 @@
-FixItNow Service - Test Data Documentation
-Acest folder conține fișierele de intrare (baze de date simulate) și scenariile de test necesare pentru rularea și validarea aplicației FixItNow.
-1. Baze de Date Principale (Inițializare)
-Aceste fișiere sunt folosite pentru a popula aplicația la pornire sau prin meniul de configurare.
-employees.txt
-Rol: Lista completă a personalului angajat în service.
-Structură: Rol, Nume, Prenume, CNP, DataAngajarii, Oras, [Competente...]
-Conține exemple pentru toate cele 3 roluri: Technician, Receptionist, Supervisor.
-Tehnicienii au lista de competențe (Tip + Brand) la finalul liniei.
-Utilizare: Se încarcă la pornirea aplicației sau din Meniul 1 (Employees) -> Load from file.
-appliances_catalog.csv (Supported Appliances)
-Rol: Catalogul oficial al modelelor pe care service-ul le poate repara.
-Structură: Tip, Brand, Model, AnFabricatie, PretReparatie, AtributExtra
-Orice cerere pentru un aparat care NU se află în această listă va fi refuzată automat de sistem.
-AtributExtra: Diagonala (TV), Capacitate (Mașini de spălat), 1/0 (Congelator Frigider).
-Utilizare: Se folosește pentru validarea cererilor la înregistrare.
-2. Scenarii de Test (Simulare)
-Aceste fișiere conțin date special concepute pentru a testa funcționalitățile complexe (alocare, cozi, refuzuri).
-requests.csv (General Test)
-Rol: Un set mixt de cereri valide și invalide pentru a testa fluxul complet.
-Conținut:
-Cereri care corespund cu competențele tehnicienilor (se vor aloca).
-Cereri valide dar fără tehnician disponibil (vor intra în Waiting List).
-Cereri invalide/modele necunoscute (vor fi Refuzate și contorizate în statistici).
-Utilizare: Meniul 3 (Requests) -> Run Scenario.
-debug_requests.csv (Test Rapid)
-Rol: Un scenariu simplificat pentru depanare (Debugging).
-Conținut:
-Durate de reparație scurte (vechime mică).
-Competențe clare (ex: o cerere doar pentru Andrei, una doar pentru Maria).
-Permite verificarea rapidă a mesajelor de "Alocare", "Execuție" și "Finalizare" din consolă.
-3. Fișiere Generate (Output)
-Aceste fișiere sunt create automat de aplicație în urma rulării rapoartelor.
-report_top_salaries.csv: Top 3 salarii calculate pe luna curentă.
-report_longest_repair.csv: Tehnicianul care a gestionat cea mai complexă reparație.
-report_waiting_list.csv: Lista cererilor rămase nerezolvate, sortată alfabetic.
-Notă pentru Testare
-Pentru a rula un test complet, urmați pașii:
-1.Încărcați employees.txt.
-2.Încărcați appliances_catalog.csv (dacă nu e hardcodat).
-3.Mergeți la Requests -> Run Scenario -> introduceți requests.csv și durata 30 secunde.
-4.Observați consola pentru mesaje în timp real.
-5.Generați rapoartele din Meniul 4.
+# 🛠️ FixItNow Service - Documentație Tehnică
+
+Acest document descrie structura fișierelor de date utilizate pentru inițializarea, testarea și raportarea în cadrul aplicației **FixItNow**.
+
+## 📂 1. Baze de Date (Input)
+
+Aceste fișiere sunt utilizate pentru a popula sistemul cu date inițiale.
+
+### 📄 `tests/employees.txt`
+**Rol:** Baza de date a angajaților.
+**Format:**
+```text
+Rol, Nume, Prenume, CNP, DataAngajarii, Oras, [Competenta1, Brand1, Competenta2, Brand2...]
+```
+*   **Technician:** Include lista de competențe la finalul liniei.
+*   **Receptionist / Supervisor:** Nu au competențe tehnice listate.
+*   **Utilizare:** Se încarcă din **Meniul 1 (Employees)** -> Optiunea "Load from file".
+
+### 📄 `tests/supported_appliances.csv`
+**Rol:** Catalogul oficial al modelelor suportate.
+**Format:**
+```text
+Tip, Brand, Model, An, Pret, AtributExtra
+```
+*   **Important:** Orice cerere pentru un aparat care nu se regăsește exact (Tip + Brand + Model) în acest fișier va fi **REFUZATĂ** automat.
+*   **AtributExtra:** Diagonala (TV), Capacitate (Mașini spălat), HasFreezer (1/0 Frigider).
+
+---
+
+## 🧪 2. Scenarii de Test (Simulare)
+
+Fișiere create pentru a valida logica de business (alocare, cozi, refuzuri).
+
+### 📄 `tests/requests.csv` (Test General)
+**Rol:** Scenariu complex pentru demonstrarea funcționalității complete.
+**Conținut:**
+1.  **Cereri Valide:** Modele existente în catalog -> Intră în **Waiting List**.
+2.  **Cereri Invalide:** Modele scrise greșit sau inexistente -> Intră în **Refused Statistics**.
+3.  **Cereri Multiple:** Pentru a testa încărcarea tehnicienilor (coada de 3 cereri).
+**Utilizare:** **Meniul 3 (Requests)** -> "Run Scenario".
+
+### 📄 `tests/debug_requests.csv` (Test Rapid)
+**Rol:** Scenariu simplificat pentru verificare vizuală (Debugging).
+**Conținut:**
+*   Conține cereri cu complexitate mică (durată scurtă de reparație).
+*   Gândit pentru a urmări ușor mesajele de status din consolă ("Tic-Tac").
+
+---
+
+## 📊 3. Rapoarte Generate (Output)
+
+Aceste fișiere sunt generate automat de aplicație în folderul rădăcină.
+
+| Nume Fișier | Descriere |
+| :--- | :--- |
+| `report_top_salaries.csv` | Top 3 angajați după salariul pe luna curentă (+ sortare alfabetică). |
+| `report_longest_repair.csv` | Datele tehnicianului care a finalizat cea mai lungă reparație. |
+| `report_waiting_list.csv` | Lista cererilor rămase nerezolvate, grupate și sortate alfabetic. |
+
+---
+
+## 🚀 Cum se rulează un test complet?
+
+1.  Porniți aplicația.
+2.  Din **Meniul Angajați**, încărcați `employees.txt`.
+3.  Din **Meniul Electrocasnice**, încărcați `supported_appliances.csv` (dacă nu sunt deja în cod).
+4.  Mergeți la **Meniul Cereri (Requests)** -> **Run Scenario**.
+5.  Introduceți numele fișierului `tests/requests.csv` și o durată (ex: `60` secunde).
+6.  Urmăriți simularea în timp real.
+7.  La final, generați rapoartele din **Meniul Rapoarte**.
