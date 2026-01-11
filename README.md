@@ -6,7 +6,7 @@ Acest document descrie structura fișierelor de date utilizate pentru inițializ
 
 Aceste fișiere sunt utilizate pentru a popula sistemul cu date inițiale.
 
-### 📄 `tests/employees.txt`
+### 📄 `tests/employee_init.csv`
 **Rol:** Baza de date a angajaților.
 **Format:**
 ```text
@@ -23,7 +23,7 @@ Rol, Nume, Prenume, CNP, DataAngajarii, Oras, [Competenta1, Brand1, Competenta2,
 Tip, Brand, Model, An, Pret, AtributExtra
 ```
 *   **Important:** Orice cerere pentru un aparat care nu se regăsește exact (Tip + Brand + Model) în acest fișier va fi **REFUZATĂ** automat.
-*   **AtributExtra:** Diagonala (TV), Capacitate (Mașini spălat), HasFreezer (1/0 Frigider).
+*   **AtributExtra:** Diagonala (TV), Capacitate (Mașină spălat), HasFreezer (1/0 Frigider).
 
 ---
 
@@ -37,7 +37,7 @@ Fișiere create pentru a valida logica de business (alocare, cozi, refuzuri).
 1.  **Cereri Valide:** Modele existente în catalog -> Intră în **Waiting List**.
 2.  **Cereri Invalide:** Modele scrise greșit sau inexistente -> Intră în **Refused Statistics**.
 3.  **Cereri Multiple:** Pentru a testa încărcarea tehnicienilor (coada de 3 cereri).
-**Utilizare:** **Meniul 3 (Requests)** -> "Run Scenario".
+**Utilizare:** **Meniul 3 (Requests)** -> "Run Requests".
 
 ### 📄 `tests/debug_requests.csv` (Test Rapid)
 **Rol:** Scenariu simplificat pentru verificare vizuală (Debugging).
