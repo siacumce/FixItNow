@@ -123,9 +123,6 @@ void Service::displayEmployee(string& CNP) {
         
             if (dynamic_cast<Supervisor*>(emp.get()) != nullptr) {
                 cout << "SUPERVISOR ]";
-                // Opțional: Poți accesa și metode specifice Supervizorului
-                // auto sup = dynamic_cast<Supervisor*>(emp.get());
-                // cout << " (Echipa: " << sup->getEchipa() << ")";
             }
             else if (dynamic_cast<Technician*>(emp.get()) != nullptr) {
                 cout << "TECHNICIAN ]";
@@ -557,7 +554,7 @@ void Service::generateLongestRepairReport(const string& filename) {
 void Service::generateWaitingListReport(const string& filename) {
     vector<Request> sortedRequests = waitingList;
 
-    // sortez alfabetic după: tip --> BranD --> model
+    // sortez alfabetic după: tip --> branD --> model
     sort(sortedRequests.begin(), sortedRequests.end(), 
          [](const Request& a, const Request& b) {
              string sA = a.getDevice()->getType() + a.getDevice()->getBrand() + a.getDevice()->getModel();

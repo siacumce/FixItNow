@@ -100,7 +100,7 @@ int main(){
                         s->fireEmployee(id);
                         break;
                     }
-                    case 4:{
+                    case 4:{ //list all of them
                         cin.ignore();
                         string cnp;
                         cout << " Enter CNP: "; getline(cin, cnp);
@@ -137,11 +137,11 @@ int main(){
                     cout << "Have a nice day !\n";
                     break;
                 }
-                case 1:{ // catalog
+                case 1:{ // catalog of supported devices
                     s->listAllAppliances();
                     break;
                 }
-                case 2:{
+                case 2:{ //aad/delete device
                     cin.ignore();
                     int choose = -1;
                     while(choose){
@@ -172,8 +172,7 @@ int main(){
                     s->listRepairedAppliances();
                     break;
                 }
-                case 4:{
-                    //refused ones statistics 
+                case 4:{//refused ones statistics 
                     s->displayRefusedOnes();
                     break;
                 }
@@ -234,7 +233,7 @@ int main(){
             }
             break;
         }
-        case 4:{   //raports
+        case 4:{   //reports
             if (s->isServiceFunctional() == false) {
                 cout << "Please hire people, the service is not functional yet. \n";
                 break; 

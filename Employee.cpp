@@ -27,7 +27,6 @@ double Employee::calculateBaseEarnings() const{
 double Employee::getSeniorityBonus() const{
         int years_of_work = calculateYearsSince(Employee::hireDate);
 
-        //this is where I am not sure
         int nr_of_bonuses = years_of_work/3;
         // for (int i = 0; i < nr_of_bonuses; i++){
         //         bonus += 0.05 * bonus;

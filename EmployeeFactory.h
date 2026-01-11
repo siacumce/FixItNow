@@ -20,7 +20,7 @@ public:
         const string& city) {
 
         if (type == "Technician") {
-            // std::make_shared is a Modern C++ module of making "new Technician(...)"
+            // std::make_shared is a Modern C++ module that I use for making "new Technician(...)"
             return make_shared<Technician>(name, surname, cnp, hireDate, city);
         }
         else if (type == "Receptionist") {

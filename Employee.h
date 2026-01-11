@@ -19,12 +19,12 @@ class Employee {
     public:
     Employee(string , string , string , string , string );
     
-    //The salary part
+    // The salary part
     virtual double calculateSalary() const = 0;
-    //base + transport + seniority
+    //Base + transport + seniority
     double calculateBaseEarnings() const;
 
-    //getters for basic bonus
+    // Getters for basic bonus
     virtual double getTransportBonus() const;
     virtual double getSeniorityBonus() const;
 
