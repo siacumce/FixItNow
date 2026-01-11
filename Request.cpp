@@ -1,7 +1,7 @@
 #include "Request.h"
 using namespace std;
 
-int Request::nextID = 0;
+int Request::nextID = 1;
 string Request::generateTimestamp() {
     time_t now = time(0);
     string dt = ctime(&now);    // Il convertim direct in text

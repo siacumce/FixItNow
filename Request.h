@@ -8,7 +8,7 @@
 class Request{
     private:
         static int nextID;
-        const int ID;
+        int ID;
 
         shared_ptr<Appliance> device; 
         string timestamp; // data + hour - unique - there aren't any 2 requests with the same timestamp

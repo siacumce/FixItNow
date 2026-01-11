@@ -10,8 +10,8 @@ string Receptionist::getRole() const{
 
 void Receptionist::disp() const{
     Employee::disp();
-    cout << "Role: " << getRole() << endl;
-    cout << "Current Month Salary: " << calculateSalary() << endl; 
+    cout << " Role: " << getRole() << endl;
+    cout << " Current Month Salary: " << calculateSalary() << endl; 
     cout << "---------------------" << endl;
 }
 

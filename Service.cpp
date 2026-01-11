@@ -2,6 +2,8 @@
 #include "EmployeeFactory.h"
 #include <fstream>
 #include <sstream>
+#include <thread>
+#include <chrono>
 #include <algorithm> 
 
 // initialization of static member 
@@ -266,19 +268,24 @@ void Service::listRepairedAppliances() const{
     }
 }
 void Service::registerRequest(const string& type, const string& brand, const string& model, int year, double price, double extra, int complexity){
-    shared_ptr<Receptionist> rec = nullptr;
+    
+    vector<shared_ptr<Receptionist>> receptionists;
     
     for (auto& emp : employees) {
-        rec = dynamic_pointer_cast<Receptionist>(emp);
+        auto rec = dynamic_pointer_cast<Receptionist>(emp);
         if (rec != nullptr) {
-            break; 
+            receptionists.push_back(rec);
         }
     }
-    if (rec == nullptr) {
+    if (receptionists.empty()) {
         cout << "[EROARE] We do not have any receptionist! We cannot have requests!\n";
         return; 
     }
     
+    //else I will choose a random one
+    int index = rand() % receptionists.size();
+    shared_ptr<Receptionist> myReceptionist = receptionists[index];
+
     bool isSupported = false;
     for(const auto& app : supportedAppliances){
         if(app->getType() == type && app->getModel() == model && app->getBrand() == brand){
@@ -298,17 +305,14 @@ void Service::registerRequest(const string& type, const string& brand, const str
         waitingList.push_back(req);
 
         //add ID in requestID vector from receptionist
-        rec->addRequestID(req.getID());
+        myReceptionist->addRequestID(req.getID());
 
-        cout << "Request has been registered by the receptionist: " << rec->getName() << " " << rec->getSurname() << endl;
+        cout << "Request has been registered by the receptionist: " << myReceptionist->getName() << " " << myReceptionist->getSurname() << endl;
     }catch(const exception&e){
         cout << "[ERROR] Invalid Data on creating request: " << e.what() << endl;
     }
 
 }
-// void Service::runSimulation(const string& filePath, int time){
-//      ;
-// }
 void Service::displayWaitingList() const{
     cout << "======= WAITING LIST ======= \n";
     if(waitingList.empty()){
@@ -351,9 +355,8 @@ void Service::logRefusedOnes(const string& type, const string& brand, const stri
     //increment its key
     refusedAppliances[value]++;
 }
-void Service::loadRequestsFromWaitingList() const{;}
 void Service::loadRequestsFromFile(const string& filePath){;
-    ifstream f("filePath");
+    ifstream f(filePath);
 
     if(!f.is_open()){
         cout << "The file: " << filePath << " could not be opened.\n";
@@ -382,13 +385,198 @@ void Service::loadRequestsFromFile(const string& filePath){;
             int complexity = stoi(dataRow[6]);
 
             registerRequest(type, brand, model, year, price, extra, complexity);
-            ///AICICICICICIICIC AI RAMAS
 
         }catch (const exception& e) {
             cout << "[ERROR] LINE " << count  << " " << e.what() << endl;
+        }        
+    }
+    f.close();
+    cout << "--->  Requests loaded from " << filePath << " ---\n";
+}
+void Service::runSimulation(int duration){
+    if(waitingList.empty()) { cout << "There aren't any requests left. \n"; return; }
+
+    cout << "======== START SIMULATION ========\n";
+    int t;
+    for(t = 1; t <= duration; t++){
+        cout << "[TIME " << t << " ]\n";
+        bool activity = false;  
+
+        auto it = waitingList.begin();
+        while( it != waitingList.end() ){
+
+            bool assigned = false;
+            shared_ptr<Technician> bestTech = nullptr;
+            int minQueue = 100;
+
+            for(auto& emp : employees){
+                auto tech = dynamic_pointer_cast<Technician>(emp);
+                if(tech && tech->isAvailable()){     // it s a technician and it is available
+                    if(tech->canRepair(it->getDevice()->getType(), it->getDevice()->getBrand())){
+                        if(tech->getQueueSize() < 3 && tech->getQueueSize() < minQueue){
+                            minQueue = tech -> getQueueSize();
+                            bestTech = tech;
+                        }
+                    }
+                }
+            }
+
+            if(bestTech != nullptr){
+                auto req = make_shared<Request>(*it);
+                bestTech->assignReq(req);
+
+                cout << "   -> [ALOCATION] REQUEST " << it->getID() << " (" << it->getDevice()->getModel() 
+                << ") accepted by the Technician " << bestTech->getName() << endl;
+                it = waitingList.erase(it);
+                assigned = true;
+                activity = true;
+            }
+
+            if(!assigned){
+                ++it;
+            }
         }
 
-        f.close();
+        // EXECUTION 
+        for(auto& emp : employees){
+            auto tech = dynamic_pointer_cast<Technician>(emp);
+
+            if (tech && tech->getQueueSize() > 0) { //if( he's NOT free )
+            
+                activity = true;
+
+                auto currentJob = tech->getCurrentWork();
+                auto finishedReq = tech->executeWork();
+
+                if(finishedReq != nullptr){
+                    cout << "[END] " << tech->getName() << " " << tech->getSurname() << " is done. \n";
+                    cout << "(Cost: " << finishedReq->getPrice() << " RON)\n";
+
+                    repairedAppliances.push_back(finishedReq->getDevice());
+                    if (tech->getQueueSize() > 0) {  // there are still things to do
+                        cout << "      ... and starts working the request with ID: " << tech->getCurrentWork()->getID() << endl;
+                    }
+                }
+                else{
+                    cout << "      " << tech->getName() << " " << tech->getSurname() << " processes the request " << currentJob->getID()
+                    << " (raman " << tech->getTimeLeft() << " seconds)";
+
+                    if (tech->getQueueSize() > 1) {
+                            cout << " [Waiting: "; cout << (tech->getQueueSize() - 1) << " other requests]";
+                    }
+                    cout << endl;
+                }
+            }
+        }
+          
+        if (!waitingList.empty()) {
+            cout << "   [GENERAL QUEUE: ";
+            for (const auto& req : waitingList) {
+                cout << req.getID() << " "; 
+            }
+            cout << endl;
+        }
+
+        if (!activity && waitingList.empty()) {
+            cout << "\nEveryone is free. Stop.\n";
+            break;
+        }
+
+        cout << flush; 
+        // Punem programul pe pauză 1 secundă (1000 milisecunde)
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
+    cout << "======== END SIMULATION ========\n";
+}
+
+
+//Reports
+void Service::generateTopSalariesReport(const string& filename) {
+
+    vector<shared_ptr<Employee>> sortedList = employees;
+
+    sort(sortedList.begin(), sortedList.end(), 
+         [](const shared_ptr<Employee>& a, const shared_ptr<Employee>& b) {
+             double salA = a->calculateSalary();
+             double salB = b->calculateSalary();
+             if (abs(salA - salB) > 0.01) { 
+                 return salA > salB;
+             }
+             //altfel alfabetic
+             if (a->getName() != b->getName()) 
+                 return a->getName() < b->getName();
+             return a->getSurname() < b->getSurname();
+         }
+    );
+
+    ofstream f(filename);
+    if (!f.is_open()) { cout << "Error saving report!\n"; return; }
+
+    f << "Surname, Name, Role, Salary (RON), ID\n";
+
+    int limit = min((int)sortedList.size(), 3);
+    
+    for (int i = 0; i < limit; i++) {
+        auto emp = sortedList[i];
+        f << (i + 1) << ", " << emp->getName() << ", " << emp->getSurname() << ", " 
+        << emp->getRole() << ", " << emp->calculateSalary() << ", "<< emp->getId() << endl;
+    }
+
+    f.close();
+    cout << "[REPORT] TOP 3 SALARIES SAVED IN : " << filename << endl;
+}
+void Service::generateLongestRepairReport(const string& filename) {
+    shared_ptr<Technician> champion = nullptr;
+    int maxDuration = -1;
+
+    for (auto& emp : employees) {
+        auto tech = dynamic_pointer_cast<Technician>(emp);
+        if (tech) {
+            if (tech->getMaxRepairDuration() > maxDuration) {
+                maxDuration = tech->getMaxRepairDuration();
+                champion = tech;
+            }
+        }
+    }
+
+    ofstream f(filename);
+    f << "Nume,Prenume,Durata Maxima Reparație (sec)\n";
+    
+    if (champion) {
+        f << champion->getName() << "," 
+          << champion->getSurname() << "," 
+          << maxDuration << "\n";
+    } else {
+        f << "Niciun tehnician nu a terminat vreo reparatie.,,\n";
+    }
+    
+    f.close();
+    cout << "[REPORT] Longest repair technician saved in: " << filename << endl;
+}
+void Service::generateWaitingListReport(const string& filename) {
+    vector<Request> sortedRequests = waitingList;
+
+    // sortez alfabetic după: tip --> BranD --> model
+    sort(sortedRequests.begin(), sortedRequests.end(), 
+         [](const Request& a, const Request& b) {
+             string sA = a.getDevice()->getType() + a.getDevice()->getBrand() + a.getDevice()->getModel();
+             string sB = b.getDevice()->getType() + b.getDevice()->getBrand() + b.getDevice()->getModel();
+             return sA < sB;
+         }
+    );
+
+    ofstream f(filename);
+    f << "ID REQUEST, Type, Brand, Model, Registration Data\n";
+
+    for (const auto& req : sortedRequests) {
+        f << req.getID() << ","
+          << req.getDevice()->getType() << ","
+          << req.getDevice()->getBrand() << ","
+          << req.getDevice()->getModel() << ","
+          << req.getTimestamp() << "\n";
+    }
+
+    f.close();
+    cout << "[REPORT] Waiting list report saved in: " << filename << endl;
 }

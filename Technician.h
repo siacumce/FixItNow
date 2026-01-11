@@ -10,7 +10,7 @@ struct Competence {
 class Technician: public Employee{
     private: vector <Competence> competences;
     vector <int> repairsValue;
-
+    int maxRepairDuration = 0;
     int timeLeft = 0;
     deque <shared_ptr<Request>> activeQRequests;
 
@@ -26,9 +26,13 @@ class Technician: public Employee{
         void disp() const override;
         string getRole() const override;
 
+
         bool isAvailable() const;
         void assignReq(shared_ptr<Request> );
         shared_ptr<Request> executeWork();
+        shared_ptr<Request> getCurrentWork() const;
+        int getTimeLeft() const;
         int getQueueSize() const;
+        int getMaxRepairDuration() const;
         ~Technician() = default;
 };

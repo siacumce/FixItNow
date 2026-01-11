@@ -14,7 +14,7 @@ void EmployeeSettingsMenu(){
 void RequestMenu(){
     cout << "0. Exit\n";
     cout << "1. Add Request\n";
-    cout << "2. Load Requests\n";
+    cout << "2. Run Requests\n";
 }
 void AppliancesSettingsMenu(){
     cout <<" 0. Exit\n";
@@ -22,6 +22,12 @@ void AppliancesSettingsMenu(){
     cout <<" 2. Add/delete brand & model\n";
     cout <<" 3. Display repair history\n";
     cout <<" 4. Display refusal list\n";
+}
+void ReportMenu(){
+    cout << "0. Exit\n";
+    cout << "1. Top 3 Salaries\n";
+    cout << "2. Longest Repair\n";
+    cout << "3. Waiting List\n";
 }
 void displayMenu(){
     cout << "[SETTINGS] \n" ; 
@@ -38,10 +44,11 @@ int main(){
     Service *s = Service::getInstance();
 
     cout << "Let's create our service! Loading database...\n";
-    s->loadEmployeesFromFile("./tests/employee_init.csv");
+    //s->loadEmployeesFromFile("./tests/employee_init.csv");
     //s->loadEmployeesFromFile("./tests/employee_init_errors.csv");
-    
+    //s->loadEmployeesFromFile("./tests/debug_employees.csv");
 
+    
     int option = -1;
     cout << "\n Hello boss! " << "What would you like to do today ? (choose your weapon 0 - 4)\n";
     while(option){
@@ -54,6 +61,7 @@ int main(){
         }
         case 1:{ //employees
             int option1 = -1;
+            s->loadEmployeesFromFile("./tests/employee_init.csv");
             while(option1){
                 EmployeeSettingsMenu();
                 cout <<"--------> Your option: "; cin >> option1;
@@ -119,6 +127,7 @@ int main(){
             }
             int option2 = - 1;
             s->loadSupportedAppliances("./tests/supported_appliances.csv");
+            //s->loadSupportedAppliances("./tests/debug_catalog.csv");
             while(option2){
                 AppliancesSettingsMenu();
                 cout <<"--------> Your option: "; cin >> option2;
@@ -205,10 +214,10 @@ int main(){
                     cin.ignore();
                     string filename;
                     int time;
-                    cout << "[ENTER] filename (e.g requests1.csv): "; getline(cin, filename);
+                    cout << "[ENTER] filename (e.g , ./tests/requests.csv ): "; getline(cin, filename);
                     cout << "Simulation Duration (seconds): "; cin >> time;
-
-                    s->runSimulation(filename, time); // all go into the waiting list and then they are shared to the technicians => + history of repaired ones
+                    s->loadRequestsFromFile(filename);
+                    s->runSimulation(time); // all go into the waiting list and then they are shared to the technicians => + history of repaired ones
                     break;
                 } 
                 case 3:{ // list wating list
@@ -231,6 +240,31 @@ int main(){
                 break; 
             }
             int option4 = -1;
+            while (option4)
+            {
+                cout << "Loading Reports\n";
+                //Report Menu
+                ReportMenu();
+                cout << "-------->Your option: "; cin >> option4;
+                switch (option4)
+                {
+                case 1:{
+                    s->generateTopSalariesReport("report_top_salaries.csv");
+                    break;
+                }
+                case 2:{
+                    s->generateLongestRepairReport("report_longest_repair.csv");
+                    break;
+                }
+                case 3:{
+                    s->generateWaitingListReport("report_waiting_list.csv");
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            
             break;
         }
         default:

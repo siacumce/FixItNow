@@ -44,10 +44,14 @@ class Service{
         void logRefusedOnes(const string& , const string& , const string& );
 
         //Repair Simulation
-        void registerRequest(const string&, const string&, const string&, int, double, double, int );
+        void registerRequest(const string&, const string&, const string&, int, double, double, int ); // ---> refused | waiting list
         void loadRequestsFromFile(const string& ); //file
-        void loadRequestsFromWaitingList() const;
-        void runSimulation(const string&, double ); //file, duration and waiting list
+        void runSimulation(int ); // duration and waiting list
         void displayWaitingList() const;
+
+        //Reports
+        void generateTopSalariesReport(const string& );
+        void generateLongestRepairReport(const string& );
+        void generateWaitingListReport(const string&);
         ~Service();
 };
