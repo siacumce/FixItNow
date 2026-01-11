@@ -62,9 +62,9 @@ Aceste fișiere sunt generate automat de aplicație în folderul rădăcină.
 ## 🚀 Cum se rulează un test complet?
 
 1.  Porniți aplicația.
-2.  Din **Meniul Angajați**, încărcați `employees.txt`.
+2.  Din **Meniul Angajați**, încărcați `employees_init.csv`. verificați angajații necesari.
 3.  Din **Meniul Electrocasnice**, încărcați `supported_appliances.csv` (dacă nu sunt deja în cod).
-4.  Mergeți la **Meniul Cereri (Requests)** -> **Run Scenario**.
+4.  Mergeți la **Meniul Cereri (Requests)** -> **Run Requests**.
 5.  Introduceți numele fișierului `tests/requests.csv` și o durată (ex: `60` secunde).
 6.  Urmăriți simularea în timp real.
 7.  La final, generați rapoartele din **Meniul Rapoarte**.
